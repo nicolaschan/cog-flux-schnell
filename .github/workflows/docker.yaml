@@ -21,9 +21,12 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install nix
+      uses: cachix/install-nix-action@v27
     - name: Build image
-      run: |
-        cog build -t cog-flux-schnell
+      uses: nicknovitski/nix-develop@v1.1.0
+      with:
+        arguments: --command cog build -t cog-flux-schnell
     - name: Push docker image
       run: |
         docker tag cog-flux-schnell ghcr.io/nicolaschan/cog-flux-schnell:${GITHUB_REF#refs/*/}-${{ github.run_id }}
