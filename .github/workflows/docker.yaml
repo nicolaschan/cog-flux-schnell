@@ -15,18 +15,19 @@ jobs:
       packages: write
     steps:
     - uses: actions/checkout@v4
+    - name: Install nix
+      uses: cachix/install-nix-action@v27
+    - name: Use nix develop shell
+      uses: nicknovitski/nix-develop@v1.1.0
+    - name: Build image
+      run: |
+        cog build -t cog-flux-schnell
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v2
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Install nix
-      uses: cachix/install-nix-action@v27
-    - name: Build image
-      uses: nicknovitski/nix-develop@v1.1.0
-      with:
-        arguments: --command cog build -t cog-flux-schnell
     - name: Push docker image
       run: |
         docker tag cog-flux-schnell ghcr.io/nicolaschan/cog-flux-schnell:${GITHUB_REF#refs/*/}-${{ github.run_id }}
