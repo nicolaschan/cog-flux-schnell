@@ -46,7 +46,6 @@
           buildInputs = with pkgs; [
             self.packages.${system}.cog
             python3
-            docker
           ];
 
           shellHook = ''
